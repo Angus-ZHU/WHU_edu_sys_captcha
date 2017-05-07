@@ -94,7 +94,7 @@ class WHUCaptcha(object):
     def normalize_characters(characters):
         normalized_characters = []
         for character in characters:
-            normalized_characters.append(cv2.resize(character, (35, 35), interpolation=cv2.INTER_NEAREST))
+            normalized_characters.append(cv2.resize(character, (28, 28), interpolation=cv2.INTER_NEAREST))
         return normalized_characters
 
     @staticmethod
@@ -102,22 +102,14 @@ class WHUCaptcha(object):
         """
         预处理加切分字符串
         :param img_dir:
-        :return:
+        :return: 28*28二值化的字符块列表
         """
         # 注意opencv是用bgr而不是rgb打开图片的
         bgr_img = cv2.imread(img_dir)
         filter_res = WHUCaptcha.color_filter(bgr_img)
         characters = WHUCaptcha.split_characters(filter_res)
         normalized_characters = WHUCaptcha.normalize_characters(characters)
-        from matplotlib import pyplot as plt
-        plt.subplot(len(normalized_characters)+1, 1, 1)
-        plt.imshow(filter_res, 'gray_r')
-        for index, character in enumerate(normalized_characters):
-            plt.subplot(len(normalized_characters) + 1, 1, index+2)
-            plt.imshow(character, 'gray_r')
-        plt.show()
-
-
+        return normalized_characters
 
     @staticmethod
     def pre_process_demo_version(img_dir='captcha.png'):
