@@ -5,7 +5,6 @@ import numpy as np
 
 class WHUCaptcha(object):
 
-
     @staticmethod
     def join_rect(rect1, rect2):
         if rect1[0] > rect2[0]:
@@ -92,24 +91,44 @@ class WHUCaptcha(object):
 
     @staticmethod
     def normalize_characters(characters):
+        """
+        先等比放大到最大边达到28像素
+        然后右边或者下边补齐0
+        :param characters: 
+        :return: 
+        """
         normalized_characters = []
         for character in characters:
-            normalized_characters.append(cv2.resize(character, (28, 28), interpolation=cv2.INTER_NEAREST))
+            width = character.shape[1]
+            height = character.shape[0]
+            if height > width:
+                normalized_character = cv2.resize(character, None, fx=28.0 / height, fy=28.0 / height,
+                                                  interpolation=cv2.INTER_NEAREST)
+                padding = np.zeros((28, 28 - normalized_character.shape[1]), dtype=normalized_character.dtype)
+                normalized_character = np.hstack((normalized_character, padding))
+            else:
+                normalized_character = cv2.resize(character, None, fx=28.0 / width, fy=28.0 / width,
+                                                  interpolation=cv2.INTER_NEAREST)
+                padding = np.zeros((28 - normalized_character.shape[0], 28), dtype=normalized_character.dtype)
+                normalized_character = np.vstack((normalized_character, padding))
+            normalized_characters.append(normalized_character)
         return normalized_characters
 
     @staticmethod
-    def pre_process(img_dir='captcha.png'):
+    def pre_process(bgr_img=cv2.imread('captcha.png')):
         """
         预处理加切分字符串
-        :param img_dir:
+        :param bgr_img:
         :return: 28*28二值化的字符块列表
         """
         # 注意opencv是用bgr而不是rgb打开图片的
-        bgr_img = cv2.imread(img_dir)
         filter_res = WHUCaptcha.color_filter(bgr_img)
         characters = WHUCaptcha.split_characters(filter_res)
-        normalized_characters = WHUCaptcha.normalize_characters(characters)
-        return normalized_characters
+        if len(characters) == 4:
+            normalized_characters = WHUCaptcha.normalize_characters(characters)
+            return normalized_characters, True
+        else:
+            return [], False
 
     @staticmethod
     def pre_process_demo_version(img_dir='captcha.png'):

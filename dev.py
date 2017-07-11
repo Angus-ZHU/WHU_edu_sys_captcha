@@ -8,10 +8,11 @@ from WHUCaptcha import WHUCaptcha
 
 
 while True:
-    captcha_url = 'http://210.42.121.241/servlet/GenImg'
+    captcha_url = 'http://210.42.121.134/servlet/GenImg'
     with open('captcha.png', 'wb') as f:
         f.write(requests.get(captcha_url).content)
-    characters = WHUCaptcha.pre_process()
+    characters, success = WHUCaptcha.pre_process()
+    pass
 
 
 
