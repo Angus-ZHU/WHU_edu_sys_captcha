@@ -112,15 +112,18 @@ class WHUCaptcha(object):
                 padding = np.zeros((28 - normalized_character.shape[0], 28), dtype=normalized_character.dtype)
                 normalized_character = np.vstack((normalized_character, padding))
             normalized_characters.append(normalized_character)
+        normalized_characters = np.array(normalized_characters)
         return normalized_characters
 
     @staticmethod
-    def pre_process(bgr_img=cv2.imread('captcha.png')):
+    def pre_process(bgr_img=None):
         """
         预处理加切分字符串
         :param bgr_img:
         :return: 28*28二值化的字符块列表
         """
+        if not bgr_img:
+            bgr_img = cv2.imread('captcha.png')
         # 注意opencv是用bgr而不是rgb打开图片的
         filter_res = WHUCaptcha.color_filter(bgr_img)
         characters = WHUCaptcha.split_characters(filter_res)
