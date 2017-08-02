@@ -18,9 +18,9 @@ for img_name in os.listdir(tagged_img_dir):
     upper_not_red_bgr = np.array([255, 255, 255])
     lower_not_red_bgr = np.array([100, 100, 100])
     binary_img = cv2.inRange(img, lower_not_red_bgr, upper_not_red_bgr)
-    # tag_array = np.zeros(36, dtype=np.int8)
-    # tag_array[mapping.index(tag)] = 1
-    label_data_set.append(tag)
+    tag_array = np.zeros(36, dtype=np.int8)
+    tag_array[mapping.index(tag)] = 1
+    label_data_set.append(tag_array)
     img_data_set.append(binary_img)
 
 with h5py.File('train/train_letter_tag.h5', 'w') as f:

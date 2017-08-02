@@ -26,7 +26,7 @@ with tf.Graph().as_default():
     # while True:
     success_count = 0
     failed_count = 0
-    for i in range(100):
+    for i in range(500):
         session = requests.session()
         response = session.get(captcha_url)
         if response.status_code == 200:
@@ -38,21 +38,25 @@ with tf.Graph().as_default():
                 result_str = ''
                 for res in results:
                     result_str += mapping[np.argmax(res)]
-                params = {
-                    'id': number,
-                    'pwd': password_hash,
-                    'xdvfb': result_str,
-                }
-                response = session.get(login_url, params=params)
-                if response.url == login_success_url:
-                    # print result_str
-                    # print 'auto login success'
-                    success_count += 1
-                else:
-                    # print result_str
-                    # print 'retry login'
-                    # break
-                    failed_count += 1
+                while True:
+                    params = {
+                        'id': number,
+                        'pwd': password_hash,
+                        'xdvfb': result_str,
+                    }
+                    response = session.get(login_url, params=params)
+                    if response.url == login_success_url:
+                        print result_str
+                        print 'auto login success'
+                        if result_str.__contains__('i'):
+                            raw_input('there is a positive i')
+                        break
+                        # success_count += 1
+                    else:
+                        print result_str
+                        print 'retry login'
+                        result_str = raw_input('input manual captcha:')
+                        # failed_count += 1
             pass
     print success_count
     print failed_count

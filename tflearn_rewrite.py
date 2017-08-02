@@ -34,8 +34,7 @@ class CaptchaModel(object):
         b_fc2 = CaptchaModel.bias_variable([36])
         net = tf.matmul(net, W_fc2) + b_fc2
         regression = tflearn.regression(net, name='label', learning_rate=0.0001, loss='softmax_categorical_crossentropy')
-
-        model = tflearn.DNN(network=net, tensorboard_dir='tmp/tf.log', tensorboard_verbose=3)
+        model = tflearn.DNN(network=regression, tensorboard_dir='tmp/tf.log', tensorboard_verbose=1)
         return model
 
 
@@ -47,4 +46,4 @@ if __name__ == '__main__':
             img = f['img']
             label = f['label']
             model.fit(f['img'], f['label'], n_epoch=8, shuffle=True, snapshot_epoch=True)
-        model.save('result/model.1.1.tflearn')
+        model.save('result/model.tflearn')
