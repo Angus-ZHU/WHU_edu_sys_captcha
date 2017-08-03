@@ -1,2 +1,2 @@
-model_checkpoint_path: "/home/zhu/Desktop/WHU_edu_sys_captcha/result/model.1.1.tflearn"
-all_model_checkpoint_paths: "/home/zhu/Desktop/WHU_edu_sys_captcha/result/model.1.1.tflearn"
+model_checkpoint_path: "/home/zhu/Desktop/WHU_edu_sys_captcha/result/model.tflearn"
+all_model_checkpoint_paths: "/home/zhu/Desktop/WHU_edu_sys_captcha/result/model.tflearn"

@@ -8,9 +8,9 @@ from WHUCaptcha import WHUCaptcha
 from tflearn_rewrite import CaptchaModel
 import tensorflow as tf
 
-mapping = ['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
-           'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
-           'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z']
+mapping = np.array(['0', '1', '2', '3', '4', '5', '6', '7', '8', '9',
+                    'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n',
+                    'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z'])
 
 
 with tf.Graph().as_default():
@@ -21,8 +21,7 @@ with tf.Graph().as_default():
     captcha_url = server + '/servlet/GenImg'
     login_url = server + '/servlet/Login'
     login_success_url = server + '/servlet/../stu/stu_index.jsp'
-    model = CaptchaModel.get_model()
-    model.load('result/model.1.1.tflearn')
+    model = CaptchaModel.get_model_with_meta_data()
     # while True:
     success_count = 0
     failed_count = 0
@@ -35,9 +34,7 @@ with tf.Graph().as_default():
             characters, success = WHUCaptcha.pre_process()
             if success:
                 results = model.predict(characters)
-                result_str = ''
-                for res in results:
-                    result_str += mapping[np.argmax(res)]
+                result_str = ''.join(mapping[results.argmax(axis=1)])
                 while True:
                     params = {
                         'id': number,
